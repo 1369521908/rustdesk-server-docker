@@ -7,6 +7,7 @@ rustdesk-server docker deploy
 
 + RELAY_SERVER_IP 字段为服务器的 IP 地址
 + REGISTERED_EMAIL 字段为注册邮箱
++ [可选] ROOT_DIR 字段为存放生成文件的目录
 
 # 启动
 docker-compose up -d
