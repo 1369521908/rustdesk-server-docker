@@ -1,0 +1,53 @@
+version: "3"
+
+# 网络配置
+networks:
+  backend:
+    driver: ${NETWORKS_DRIVER}
+
+services:
+  hbbs:
+    build:
+      context: ./hbbs
+    environment:
+      - TZ=${TZ}
+    restart: always
+    privileged: true
+    ports:
+      - "21114:21114"
+      - "21115:21115"
+      - "21116:21116"
+      - "21116:21116/udp"
+      - "21118:21118"
+    volumes:
+      - ${ROOT_DIR}:/root
+    tty: true
+    networks:
+      - backend
+    command: hbbs -r ${RELAY_SERVER_IP} -m ${REGISTERED_EMAIL} -k _
+    logging:
+      driver: json-file
+      options:
+        max-size: "1g"
+        max-file: "2"
+  hbbr:
+    build:
+      context: ./hbbr
+    environment:
+      - TZ=${TZ}
+    restart: always
+    privileged: true
+    ports:
+      - "21117:21117"
+      - "21119:21119"
+    volumes:
+      - ${ROOT_DIR}:/root
+    tty: true
+    networks:
+      - backend
+    command: hbbr -m ${REGISTERED_EMAIL} -k _
+    logging:
+      driver: json-file
+      options:
+        max-size: "1g"
+        max-file: "2"
